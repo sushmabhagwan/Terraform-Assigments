@@ -1,0 +1,45 @@
+name: DevOps System Info Workflow
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  system-info-job:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create DevOps Directory
+        run: mkdir -p devops
+
+      - name: Create Info File
+        run: echo "GitHub Actions is working successfully" > devops/info.txt
+
+      - name: Create Date File
+        run: date > devops/date.txt
+
+      - name: Display Info File
+        run: cat devops/info.txt
+
+      - name: Display Date File
+        run: cat devops/date.txt
+
+      - name: Commit Changes
+        run: |
+          git config --global user.name "sushmabhagwan"
+          git config --global user.email "sushmabhagwan@icloud.com"
+          git add .
+          git commit -m "Added DevOps system files" || echo "No changes"
+
+      - name: Push Changes
+        run: git push
