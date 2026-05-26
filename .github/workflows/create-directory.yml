@@ -27,3 +27,13 @@ jobs:
 
       - name: Display File Content
         run: cat sushma/sample.txt
+
+      - name: Commit Changes
+        run: |
+          git config --global user.name "sushmabhagwan"
+          git config --global user.email "sushmabhagwan@icloud.com"
+          git add .
+          git commit -m "Created sushma directory and file" || echo "No changes"
+
+      - name: Push Changes
+        run: git push
