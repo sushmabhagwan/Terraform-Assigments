@@ -13,7 +13,9 @@ jobs:
   terraform:
 
     runs-on: ubuntu-latest
-
+    defaults:
+  run:
+    working-directory: assignment-7-githubactions-terraform
     steps:
 
       - name: Checkout Repository
