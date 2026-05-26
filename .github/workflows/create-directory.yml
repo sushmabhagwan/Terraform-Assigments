@@ -1,0 +1,29 @@
+name: Create Directory and File
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  create-folder-and-file:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create Directory
+        run: mkdir -p sushma
+
+      - name: Create File Inside Directory
+        run: touch sushma/sample.txt
+
+      - name: Add Content to File
+        run: echo "Hello from GitHub Actions" > sushma/sample.txt
+
+      - name: Display File Content
+        run: cat sushma/sample.txt
