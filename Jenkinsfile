@@ -47,13 +47,7 @@ stages {
         }
     }
 
-    stage('Verify AWS Access') {
-    steps {
-        sh '''
-        aws sts get-caller-identity
-        '''
-         }
-    }   
+    
 
     stage('Terraform Plan') {
         steps {
