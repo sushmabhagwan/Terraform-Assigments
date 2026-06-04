@@ -1,56 +1,31 @@
-pipeline {
-    agent any
-
-    environment {
-        AWS_ACCESS_KEY_ID     = credentials('aws-access-key')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
-        AWS_DEFAULT_REGION    = 'us-east-1'
+stage('Terraform Init') {
+    steps {
+        dir('assignment-7-githubactions-terraform') {
+            sh 'terraform init'
+        }
     }
+}
 
-    stages {
-
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
+stage('Terraform Validate') {
+    steps {
+        dir('assignment-7-githubactions-terraform') {
+            sh 'terraform validate'
         }
+    }
+}
 
-        stage('Terraform Init') {
-            steps {
-                dir('terraform') {
-                    sh 'terraform init'
-                }
-            }
+stage('Terraform Plan') {
+    steps {
+        dir('assignment-7-githubactions-terraform') {
+            sh 'terraform plan -out=tfplan'
         }
+    }
+}
 
-        stage('Terraform Validate') {
-            steps {
-                dir('terraform') {
-                    sh 'terraform validate'
-                }
-            }
-        }
-
-        stage('Terraform Plan') {
-            steps {
-                dir('terraform') {
-                    sh 'terraform plan -out=tfplan'
-                }
-            }
-        }
-
-        stage('Manual Approval') {
-            steps {
-                input 'Approve Terraform Apply?'
-            }
-        }
-
-        stage('Terraform Apply') {
-            steps {
-                dir('terraform') {
-                    sh 'terraform apply -auto-approve tfplan'
-                }
-            }
+stage('Terraform Apply') {
+    steps {
+        dir('assignment-7-githubactions-terraform') {
+            sh 'terraform apply -auto-approve tfplan'
         }
     }
 }
