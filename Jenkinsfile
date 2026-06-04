@@ -1,62 +1,56 @@
 pipeline {
-
     agent any
 
     environment {
-        AWS_ACCESS_KEY_ID = credentials('aws-access-key')
+        AWS_ACCESS_KEY_ID     = credentials('aws-access-key')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
-        AWS_DEFAULT_REGION = 'us-east-1'
+        AWS_DEFAULT_REGION    = 'us-east-1'
     }
 
     stages {
 
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Verify Tools') {
+        stage('Terraform Init') {
             steps {
-                sh 'terraform version'
+                dir('terraform') {
+                    sh 'terraform init'
+                }
             }
         }
 
-        stage('Terraform Init') {
+        stage('Terraform Validate') {
             steps {
-                sh 'terraform init'
+                dir('terraform') {
+                    sh 'terraform validate'
+                }
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan -out=tfplan'
+                dir('terraform') {
+                    sh 'terraform plan -out=tfplan'
+                }
             }
         }
 
         stage('Manual Approval') {
             steps {
-                input(
-                    message: 'Do you want to apply Terraform changes?',
-                    ok: 'Approve'
-                )
+                input 'Approve Terraform Apply?'
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                sh 'terraform apply -auto-approve tfplan'
+                dir('terraform') {
+                    sh 'terraform apply -auto-approve tfplan'
+                }
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Terraform deployment successful'
-        }
-
-        failure {
-            echo 'Terraform deployment failed'
         }
     }
 }
