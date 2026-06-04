@@ -1,6 +1,6 @@
 resource "aws_security_group" "githubactions_sg" {
 
-  name        = "githubactions-sg"
+  name        = "githubactions-sg-jenkins"
   description = "Allow SSH access"
 
   ingress {
@@ -33,7 +33,7 @@ resource "aws_security_group" "githubactions_sg" {
 
 resource "aws_iam_role" "ssm_role" {
 
-  name = "githubactions-ssm-role"
+  name = "githubactions-ssm-role-jenkins"
 
   assume_role_policy = jsonencode({
 
@@ -63,7 +63,7 @@ resource "aws_iam_role_policy_attachment" "ssm_policy" {
 
 resource "aws_iam_instance_profile" "ssm_profile" {
 
-  name = "githubactions-ssm-profile"
+  name = "githubactions-ssm-profile-jenkins"
 
   role = aws_iam_role.ssm_role.name
 }
