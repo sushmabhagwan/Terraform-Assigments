@@ -20,7 +20,17 @@ stages {
             sh 'terraform version'
         }
     }
+    stage('Verify AWS Credentials') {
+    steps {
+        sh '''
+        echo "ACCESS KEY LENGTH:"
+        echo ${#AWS_ACCESS_KEY_ID}
 
+        echo "SECRET KEY LENGTH:"
+        echo ${#AWS_SECRET_ACCESS_KEY}
+        '''
+    }
+   }
     stage('Terraform Init') {
         steps {
             dir('assignment-7-githubactions-terraform') {
@@ -36,6 +46,14 @@ stages {
             }
         }
     }
+
+    stage('Verify AWS Access') {
+    steps {
+        sh '''
+        aws sts get-caller-identity
+        '''
+         }
+    }   
 
     stage('Terraform Plan') {
         steps {
